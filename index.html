@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>河财跑腿小站</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4);
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀</div>
+        <h1>河财跑腿小站</h1>
+        <p>校园跑腿服务，让生活更便捷</p>
+        
+        <div class="countdown">正在跳转 <span id="count">3</span> 秒</div>
+        
+        <button class="button" onclick="redirectNow()">
+            🚗 立即进入跑腿系统
+        </button>
+        
+        <div class="loading" id="loading">
+            ⏳ 正在进入系统...
+        </div>
+        
+        <p style="margin-top: 30px; font-size: 14px; opacity: 0.7;">
+            如果无法自动跳转，请点击上方按钮
+        </p>
+    </div>
+
+    <script>
+        // 自动跳转倒计时
+        let count = 3;
+        const countElement = document.getElementById('count');
+        
+        const timer = setInterval(() => {
+            count--;
+            countElement.textContent = count;
+            
+            if (count <= 0) {
+                clearInterval(timer);
+                redirectNow();
+            }
+        }, 1000);
+        
+        // 手动跳转函数
+        function redirectNow() {
+            document.getElementById('loading').style.display = 'block';
+            window.location.href = 'paotui.html';
+        }
+        
+        // 5秒后强制跳转（防止卡住）
+        setTimeout(() => {
+            if (window.location.href.indexOf('paotui.html') === -1) {
+                redirectNow();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
