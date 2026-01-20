@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>河财跑腿小站 - 需求查询</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-bottom: 20px;
+        }
+        .logo span {
+            color: #7c3aed;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+            text-align: left;
+            display: none;
+        }
+        .result h3 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .info-item {
+            margin: 10px 0;
+            display: flex;
+        }
+        .info-label {
+            width: 80px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .info-value {
+            flex: 1;
+            color: #111827;
+        }
+        .error {
+            color: #dc2626;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fee2e2;
+            border-radius: 8px;
+            display: none;
+        }
+        .instructions {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #0369a1;
+        }
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .instructions li {
+            margin: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .instructions li::before {
+            content: "•";
+            color: #4f46e5;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-matched { background: #dcfce7; color: #166534; }
+        .status-completed { background: #e5e7eb; color: #374151; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">河财跑腿<span>小站</span></div>
+        <p style="color: #6b7280; margin-bottom: 20px;">输入序号，查询需求详情</p>
+        
+        <input type="text" id="orderNumber" 
+               placeholder="请输入完整序号（例如：PT20241001）" 
+               onkeypress="handleEnter(event)">
+        <button onclick="searchOrder()">查询需求详情</button>
+        
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="result" id="result">
+            <h3>需求详情 <span class="status" id="statusBadge"></span></h3>
+            <div class="info-item">
+                <div class="info-label">订单号</div>
+                <div class="info-value" id="orderId"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">类型</div>
+                <div class="info-value" id="orderType"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">详情</div>
+                <div class="info-value" id="orderDetail"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">报酬</div>
+                <div class="info-value" id="orderReward"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">期望时间</div>
+                <div class="info-value" id="orderTime"></div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">发布时间</div>
+                <div class="info-value" id="orderDate"></div>
+            </div>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e5e7eb;">
+                <p style="color: #4f46e5; font-weight: 600;">接单方式</p>
+                <p style="color: #6b7280; font-size: 14px; margin-top: 5px;">
+                    如需接单，请截图此页面，在公众号后台联系客服对接
+                </p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p style="font-weight: 600; margin-bottom: 10px;">使用说明：</p>
+            <ul>
+                <li>序号来自"需求总表"中的第一列</li>
+                <li>仅显示需求信息，不显示联系方式</li>
+                <li>状态说明：待接单/已匹配/已完成</li>
+                <li>如需联系发布者，请通过公众号客服</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 这里的数据应该替换为你的实际数据源
+        // 实际使用时，建议使用Google Sheets API或部署后端
+        
+        // 模拟数据 - 实际使用时替换为你的数据
+        const mockOrders = {
+            "PT20241001": {
+                type: "取快递",
+                detail: "南区菜鸟驿站取3个包裹送到北区宿舍3号楼",
+                reward: "8元",
+                time: "今天17:00前",
+                date: "2024-10-10",
+                status: "待接单"
+            },
+            "PT20241002": {
+                type: "打印资料",
+                detail: "打印80页双面复习资料，送到教学楼A301",
+                reward: "10元",
+                time: "明天14:00前",
+                date: "2024-10-10",
+                status: "已匹配"
+            },
+            "PT20241003": {
+                type: "食堂代买",
+                detail: "东区食堂二楼的麻辣香锅（中辣）+ 两碗米饭",
+                reward: "5元",
+                time: "今天12:30前",
+                date: "2024-10-10",
+                status: "已完成"
+            }
+        };
+
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                searchOrder();
+            }
+        }
+
+        function searchOrder() {
+            const orderNumber = document.getElementById('orderNumber').value.trim().toUpperCase();
+            const resultDiv = document.getElementById('result');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // 隐藏之前的显示
+            resultDiv.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            if (!orderNumber) {
+                showError("请输入订单序号");
+                return;
+            }
+            
+            // 实际使用时应改为从API获取数据
+            // 这里用模拟数据演示
+            const orderData = mockOrders[orderNumber];
+            
+            if (!orderData) {
+                showError("未找到该序号对应的订单，请检查序号是否正确");
+                return;
+            }
+            
+            // 填充数据
+            document.getElementById('orderId').textContent = orderNumber;
+            document.getElementById('orderType').textContent = orderData.type;
+            document.getElementById('orderDetail').textContent = orderData.detail;
+            document.getElementById('orderReward').textContent = orderData.reward;
+            document.getElementById('orderTime').textContent = orderData.time;
+            document.getElementById('orderDate').textContent = orderData.date;
+            
+            // 设置状态标签
+            const statusBadge = document.getElementById('statusBadge');
+            statusBadge.textContent = orderData.status;
+            statusBadge.className = 'status ';
+            
+            switch(orderData.status) {
+                case '待接单':
+                    statusBadge.className += 'status-pending';
+                    break;
+                case '已匹配':
+                    statusBadge.className += 'status-matched';
+                    break;
+                case '已完成':
+                    statusBadge.className += 'status-completed';
+                    break;
+            }
+            
+            resultDiv.style.display = 'block';
+            
+            // 清空输入框
+            document.getElementById('orderNumber').value = '';
+        }
+        
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
