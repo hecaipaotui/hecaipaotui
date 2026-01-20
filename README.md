@@ -1,16 +1,14 @@
-## Hi there 👋
+# 河财跑腿小站 - 需求查询系统
 
-<!--
-**hecaipaotui/hecaipaotui** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+一个简单的需求查询网页，用户输入订单序号即可查看需求详情。
 
-Here are some ideas to get you started:
+## 功能特点
+- 保护用户隐私，不显示联系方式
+- 响应式设计，手机端友好
+- 简单易用，只需输入序号
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## 使用方法
+1. 访问网站
+2. 输入订单序号（如 PT20241001）
+3. 查看需求详情
+4. 如需接单，通过公众号联系客服
